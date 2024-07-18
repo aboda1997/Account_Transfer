@@ -3,10 +3,9 @@ import openpyxl
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Account
-
+import json 
 @csrf_exempt
 def import_data(request):
-    Account.objects.all().delete()
     if request.method == 'POST':
         try:
             uploaded_file = request.FILES['file']
@@ -48,16 +47,19 @@ def get_data(request):
     accounts = Account.objects.all()
     return JsonResponse({'accounts': list(accounts.values())}, status= 200)
 
-
+@csrf_exempt
 def account_transfer(request):
-    from_account_id = request.data.get('fromAccountId')
-    to_account_id = request.data.get('toAccountId')
-    amount = request.data.get('amount')
+    data = json.loads(request.body.decode('utf-8')) 
+    from_account_id = data.get('fromAccountId').strip()
+    to_account_id = data.get('toAccountId').strip()
+    amount = float(data.get('amount'))
+
     if request.method == 'POST':
 
         try:
-            from_account = Account.objects.get(account_id=from_account_id)
-            to_account = Account.objects.get(account_id=to_account_id)
+            from_account = Account.objects.get(id=str(from_account_id))
+            to_account = Account.objects.get(id=to_account_id)
+          
 
             if from_account.balance < amount:
                 return JsonResponse({'success': False, 'message': 'Insufficient balance in the from account.'}, status=400)

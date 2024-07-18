@@ -10,7 +10,7 @@ transfer funds between any two accounts
 
 1- clone the repo 
 2- install the docker desktop 
-3- run this  command to build docker image ## docker compose --build 
+3- run this  command to build docker image ## docker compose up  --build 
 
 
 then start the application  

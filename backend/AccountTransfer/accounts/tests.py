@@ -47,10 +47,9 @@ class TransferFundsTestCase(TestCase):
             'toAccountId': 'account2',
             'amount': 200
         }
-        response = self.client.post(reverse('account_transfer'), data=data, format='json')
+        response = self.client.post(reverse('account_transfer'), data=data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(response.data['success'])
-        self.assertEqual(response.data['message'], 'Transfer successful.')
+        self.assertEqual(response.json(), {'success': True, 'message': 'Transfer successful.'})
 
         self.account1.refresh_from_db()
         self.account2.refresh_from_db()
@@ -63,10 +62,9 @@ class TransferFundsTestCase(TestCase):
             'toAccountId': 'account2',
             'amount': 2000
         }
-        response = self.client.post(reverse('account_transfer'), data=data, format='json')
+        response = self.client.post(reverse('account_transfer'), data=data, content_type='application/json')
         self.assertEqual(response.status_code, 400)
-        self.assertFalse(response.data['success'])
-        self.assertEqual(response.data['message'], 'Insufficient balance in the from account.')
+        self.assertEqual(response.json(), {'success': False, 'message': 'Insufficient balance in the from account.'})
 
         self.account1.refresh_from_db()
         self.account2.refresh_from_db()
@@ -79,10 +77,9 @@ class TransferFundsTestCase(TestCase):
             'toAccountId': 'account2',
             'amount': 200
         }
-        response = self.client.post(reverse('transfer_funds'), data=data, format='json')
+        response = self.client.post(reverse('account_transfer'), data=data, content_type='application/json')
         self.assertEqual(response.status_code, 404)
-        self.assertFalse(response.data['success'])
-        self.assertEqual(response.data['message'], 'One or both accounts do not exist.')
+        self.assertEqual(response.json(), {'success': False, 'message': 'One or both accounts do not exist.'})
 
         self.account1.refresh_from_db()
         self.account2.refresh_from_db()
