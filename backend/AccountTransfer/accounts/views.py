@@ -41,8 +41,6 @@ def import_data(request):
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
 
 
-
-
 def get_data(request):
     accounts = Account.objects.all()
     return JsonResponse({'accounts': list(accounts.values())}, status= 200)
