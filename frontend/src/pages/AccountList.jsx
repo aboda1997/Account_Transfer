@@ -23,7 +23,7 @@ function AccountList() {
   }, []);
  const handleSearchData= 
   (e) => {
-    const searchText = e.target.value.toLowerCase();    
+    const searchText = e.target.value.trim().toLowerCase();    
     if(searchText === ''){
       setsearchData(data);
     } else{

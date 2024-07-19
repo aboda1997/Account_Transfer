@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import {BASE_URL } from '../helpers/general';
+import swal from 'sweetalert';
+
 const AccountTransfer = () => {
   const [fromAccountId, setFromAccountId] = useState('');
   const [toAccountId, setToAccountId] = useState('');
@@ -18,16 +20,22 @@ const AccountTransfer = () => {
 
       if (response.data.success) {
         setSuccessMessage('Transfer successful!');
+        swal("Good job!", "Transfer successful!", "success");
+
         setErrorMessage('');
         setFromAccountId('');
         setToAccountId('');
         setTransferAmount(0);
       } else {
         setErrorMessage(response.data.message);
+        swal("Error!", `${response.data.message}`, "error");
+
         setSuccessMessage('');
       }
     } catch (error) {
       setErrorMessage('An error occurred during the transfer.');
+      swal("Error!", 'An error occurred during the transfer.', "error");
+
       setSuccessMessage('');
       console.error('Error transferring funds:', error);
     }
